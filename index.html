@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字保存フォーム</title>
+</head>
+<body>
+    <h1>文字保存フォーム</h1>
+    <form id="textForm">
+        <label for="text">文字:</label>
+        <input type="text" id="text" name="text" required><br><br>
+        <input type="submit" value="保存">
+    </form>
+
+    <h2>保存された文字</h2>
+    <ul id="textList"></ul>
+
+    <script>
+        document.getElementById('textForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const text = document.getElementById('text').value;
+
+            let texts = JSON.parse(localStorage.getItem('texts')) || [];
+            texts.push(text);
+            localStorage.setItem('texts', JSON.stringify(texts));
+
+            displayTexts();
+            document.getElementById('textForm').reset();
+        });
+
+        function displayTexts() {
+            const textList = document.getElementById('textList');
+            textList.innerHTML = '';
+
+            const texts = JSON.parse(localStorage.getItem('texts')) || [];
+            texts.forEach(text => {
+                const listItem = document.createElement('li');
+                listItem.textContent = text;
+                textList.appendChild(listItem);
+            });
+        }
+
+        // ページが読み込まれたときに保存されたデータを表示する
+        document.addEventListener('DOMContentLoaded', displayTexts);
+    </script>
+</body>
+</html>
